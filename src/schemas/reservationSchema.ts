@@ -22,8 +22,11 @@ export const reservationSchema = (rooms: any[]) =>
             ),
         name: yup.string().required("El nombre es obligatorio"),
         birthDate: yup.date().required("La fecha de nacimiento es obligatoria"),
-        gender: yup.string().oneOf(["Masculino", "Femenino", "Otro"]).required("El género es obligatorio"),
-        documentType: yup.string().oneOf(["DNI", "Pasaporte", "Cédula"]).required("El tipo de documento es obligatorio"),
+        gender: yup
+            .string()
+            .oneOf(["Masculino", "Femenino", "Otro"], "El género debe ser uno de los siguientes valores: Masculino, Femenino, Otro")
+            .required("El género es obligatorio"),
+        documentType: yup.string().oneOf(["Cédula de Extranjeria", "Cédula"], "El tipo de documento debe ser uno de los siguientes valores: Cédula, Cedula de Extranjeria").required("El tipo de documento es obligatorio"),
         documentNumber: yup.string().required("El número de documento es obligatorio"),
         email: yup
             .string()

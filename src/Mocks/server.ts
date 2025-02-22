@@ -72,7 +72,14 @@ export function makeServer() {
             this.delete("/reservations/:id", (schema, request) => {
                 let id = request.params.id;
                 let reservation = schema.find("reservation", id);
-                return reservation?.destroy();
+                console.log("🚀 ~ file: server.ts ~ line 92 ~ this.delete ~ reservation", reservation);
+
+                if (reservation) {
+                    reservation.destroy();
+                    return new Response(JSON.stringify({ message: "Reservation deleted successfully" }), { status: 200, headers: { "Content-Type": "application/json" } });
+                } else {
+                    return new Response(JSON.stringify({ error: "Reservation not found" }), { status: 404, headers: { "Content-Type": "application/json" } });
+                }
             });
 
             this.patch("/hotels/:id", (schema, request) => {

@@ -17,7 +17,15 @@ const Reservations = () => {
     useEffect(() => {
         if (reservations.length === 0) {
             api.get("/reservations").then((response) => {
-                setReservations(response.data.reservations);
+                if (Array.isArray(response.data.reservations)) {
+                    setReservations(response.data.reservations);
+                } else {
+                    console.error("❌ La API no devolvió un array de reservas.");
+                    setReservations([]);
+                }
+            }).catch((error) => {
+                console.error("❌ Error al obtener las reservas:", error);
+                setReservations([]);
             });
         }
 
@@ -35,10 +43,15 @@ const Reservations = () => {
         return format(new Date(dateString), "d 'de' MMMM 'de' yyyy", { locale: es });
     };
 
-    const deleteReservation = async (reservationId: string) => {
+    const deleteReservation = async (reservationId: string, roomId: string) => {
         try {
             await api.delete(`/reservations/${reservationId}`);
-            setReservations((prev) => prev.filter((res) => res.id !== reservationId));
+
+            setReservations(reservations.filter((res: Reservation) => res.id !== reservationId));
+            const storedDisabledRooms = JSON.parse(localStorage.getItem("disabledRooms") || "[]");
+            const updatedDisabledRooms = storedDisabledRooms.filter((id: string) => id !== roomId);
+            localStorage.setItem("disabledRooms", JSON.stringify(updatedDisabledRooms));
+
             toast.success("✅ Reserva eliminada correctamente.");
             setSelectedReservation(null);
         } catch (error) {
@@ -46,6 +59,8 @@ const Reservations = () => {
             toast.error("No se pudo eliminar la reserva.");
         }
     };
+
+
 
     const filteredReservations = reservations.filter((res) => {
         return (
@@ -57,8 +72,6 @@ const Reservations = () => {
     return (
         <div className="max-w-6xl mx-auto p-6">
             <h1 className="text-2xl font-bold text-center mb-6">Reservas Realizadas</h1>
-
-            {/* 📌 Filtros */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <select
                     value={filterHotel}
@@ -100,7 +113,7 @@ const Reservations = () => {
                     <p><strong>Huéspedes:</strong> {selectedReservation.guests}</p>
 
                     <button
-                        onClick={() => deleteReservation(selectedReservation.id)}
+                        onClick={() => deleteReservation(selectedReservation.id, selectedReservation.roomId)}
                         className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md flex items-center space-x-2"
                     >
                         <FaTrash size={16} />

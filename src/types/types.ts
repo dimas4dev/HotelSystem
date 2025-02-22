@@ -55,6 +55,7 @@ export interface Reservation {
     checkOut: string;
     guests: number;
     hotelId: string;
+    roomId: string;
 }
 
 export interface User {

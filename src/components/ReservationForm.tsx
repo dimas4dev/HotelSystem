@@ -22,6 +22,17 @@ const ReservationForm = () => {
       hotelId: "",
       roomId: "",
       guests: 1,
+      name: "",
+      birthDate: new Date(),
+      gender: undefined,
+      documentType: undefined,
+      documentNumber: "",
+      email: "",
+      phone: "",
+      checkIn: new Date(),
+      checkOut: new Date(),
+      emergencyContactName: "",
+      emergencyContactPhone: "",
     },
   });
 
@@ -54,11 +65,10 @@ const ReservationForm = () => {
     setRooms(availableRooms);
   }, [selectedHotelId, hotels, disabledRooms]);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  useEffect(() => { console.log(errors) }, [errors]);
 
+  const onSubmit = async (data: any) => {
     try {
-      console.log("📡 Enviando reserva a la API:", data);
       await api.post("/reservations", data);
 
       const selectedRoom = rooms.find((room) => room.id === data.roomId);
@@ -79,7 +89,6 @@ const ReservationForm = () => {
           room.id === data.roomId ? { ...room, active: false } : room
         ),
       });
-
       toast.success(`Reserva confirmada para ${data.name}.`);
       reset();
     } catch (error) {
@@ -119,8 +128,7 @@ const ReservationForm = () => {
           <label className="block text-sm">Tipo de Documento</label>
           <select {...register("documentType")} className="border p-2 rounded-md w-full">
             <option value="">Seleccione</option>
-            <option value="DNI">DNI</option>
-            <option value="Pasaporte">Pasaporte</option>
+            <option value="Cédula de Extranjeria">Cédula de Extranjeria</option>
             <option value="Cédula">Cédula</option>
           </select>
           <p className="text-red-500 text-sm">{errors.documentType?.message}</p>
@@ -158,25 +166,35 @@ const ReservationForm = () => {
           <p className="text-red-500 text-sm">{errors.roomId?.message}</p>
         </div>
         <div>
+          <label className="block text-sm">Cantidad de Huéspedes</label>
+          <input type="number" {...register("guests")} className="border p-2 rounded-md w-full" />
+          <p className="text-red-500 text-sm">{errors.guests?.message}</p>
+        </div>
+        <div>
           <label className="block text-sm">Fecha de Entrada</label>
           <input type="date" {...register("checkIn")} className="border p-2 rounded-md w-full" />
           <p className="text-red-500 text-sm">{errors.checkIn?.message}</p>
         </div>
         <div>
           <label className="block text-sm">Fecha de Salida</label>
-          <input type="date" {...register("checkOut")} className="border p-2 rounded-md w-full" />
+          <input type="date" {...register("checkOut", { valueAsDate: true })} className="border p-2 rounded-md w-full" />
           <p className="text-red-500 text-sm">{errors.checkOut?.message}</p>
         </div>
-      </div>
-      <div>
-        <label className="block text-sm">Nombre del Contacto de Emergencia</label>
-        <input {...register("emergencyContactName")} className="border p-2 rounded-md w-full" />
-        <p className="text-red-500 text-sm">{errors.emergencyContactName?.message}</p>
-      </div>
-      <div>
-        <label className="block text-sm">Teléfono del Contacto de Emergencia</label>
-        <input {...register("emergencyContactPhone")} className="border p-2 rounded-md w-full" />
-        <p className="text-red-500 text-sm">{errors.emergencyContactPhone?.message}</p>
+        <div>
+          <label className="block text-sm">Email</label>
+          <input type="email" {...register("email")} className="border p-2 rounded-md w-full" />
+          <p className="text-red-500 text-sm">{errors.email?.message}</p>
+        </div>
+        <div>
+          <label className="block text-sm">Nombre del Contacto de Emergencia</label>
+          <input {...register("emergencyContactName")} className="border p-2 rounded-md w-full" />
+          <p className="text-red-500 text-sm">{errors.emergencyContactName?.message}</p>
+        </div>
+        <div>
+          <label className="block text-sm">Teléfono del Contacto de Emergencia</label>
+          <input {...register("emergencyContactPhone")} className="border p-2 rounded-md w-full" />
+          <p className="text-red-500 text-sm">{errors.emergencyContactPhone?.message}</p>
+        </div>
       </div>
 
       <button
