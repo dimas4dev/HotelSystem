@@ -20,11 +20,9 @@ const Reservations = () => {
                 if (Array.isArray(response.data.reservations)) {
                     setReservations(response.data.reservations);
                 } else {
-                    console.error("❌ La API no devolvió un array de reservas.");
                     setReservations([]);
                 }
             }).catch((error) => {
-                console.error("❌ Error al obtener las reservas:", error);
                 setReservations([]);
             });
         }
@@ -55,7 +53,6 @@ const Reservations = () => {
             toast.success("✅ Reserva eliminada correctamente.");
             setSelectedReservation(null);
         } catch (error) {
-            console.error("❌ Error al eliminar la reserva:", error);
             toast.error("No se pudo eliminar la reserva.");
         }
     };

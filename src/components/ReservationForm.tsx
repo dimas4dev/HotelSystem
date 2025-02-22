@@ -65,8 +65,6 @@ const ReservationForm = () => {
     setRooms(availableRooms);
   }, [selectedHotelId, hotels, disabledRooms]);
 
-  useEffect(() => { console.log(errors) }, [errors]);
-
   const onSubmit = async (data: any) => {
     try {
       await api.post("/reservations", data);
@@ -92,7 +90,6 @@ const ReservationForm = () => {
       toast.success(`Reserva confirmada para ${data.name}.`);
       reset();
     } catch (error) {
-      console.error("❌ Error al crear la reserva:", error);
       toast.error("Error al procesar la reserva.");
     }
   };

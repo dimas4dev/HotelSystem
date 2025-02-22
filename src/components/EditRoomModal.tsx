@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { api } from "../services/api";
-import { FaSave, FaTimes, FaToggleOff, FaToggleOn } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import { roomSchema } from "../schemas/roomSchema";
 import { EditRoomModalProps } from "../types/types";
 
 const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: EditRoomModalProps) => {
-    const [localRoomData, setLocalRoomData] = useState(roomData);
+    const [localRoomData, setLocalRoomData] = useState(roomData || {});
 
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(roomSchema),
@@ -16,12 +16,19 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
     });
 
     useEffect(() => {
+        if (roomData) {
+            setLocalRoomData(roomData);
+        }
+    }, [roomData]);
+
+    useEffect(() => {
         const subscription = watch((values) => {
             if (values?.baseCost !== undefined && values?.taxes !== undefined) {
-                setValue("price", values.baseCost + values.taxes);
+                const newPrice = values.baseCost + values.taxes;
+                setValue("price", newPrice);
                 setLocalRoomData((prev: any) => ({
                     ...prev,
-                    price: values.baseCost + values.taxes
+                    price: newPrice
                 }));
             }
         });
@@ -38,7 +45,6 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
             toast.success("Habitación actualizada correctamente.");
             onClose();
         } catch (error) {
-            console.error("❌ Error al actualizar la habitación:", error);
             toast.error("Hubo un error al actualizar la habitación.");
         }
     };
@@ -47,8 +53,7 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
         try {
             const updatedRoom = { ...roomData, active: !roomData.active };
             const response = await api.patch(`/hotels/${hotelId}/rooms/${roomData.id}`, updatedRoom);
-            const JsonResponse = JSON.parse(response.config.data);
-
+            const JsonResponse = JSON.parse(response.data._bodyText);
             if (!JsonResponse.id) {
                 throw new Error("La API no devolvió la habitación actualizada correctamente.");
             }
@@ -62,9 +67,8 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
 
             updateRoomList(JsonResponse);
             toast.success(`La habitación ha sido ${updatedRoom.active ? "habilitada" : "deshabilitada"}.`);
-
+            setLocalRoomData(updatedRoom);
         } catch (error) {
-            console.error("❌ Error al cambiar el estado de la habitación:", error);
             toast.error("No se pudo cambiar el estado de la habitación.");
         }
     };
@@ -109,7 +113,7 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
                         <input
                             type="number"
                             {...register("price")}
-                            value={localRoomData.price}
+                            value={localRoomData?.price || 0}
                             disabled
                             className="border p-2 rounded-md w-full bg-gray-100"
                         />
@@ -123,14 +127,21 @@ const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: E
                         />
                         <p className="text-red-500 text-sm">{errors.maxGuests?.message?.toString()}</p>
 
-                        <div className="flex justify-between mt-4">
-                            <div className="flex flex-col items-center space-y-2">
-                                <span className="text-sm font-semibold text-center">Estado de la Habitación</span>
-                                <button type="button" onClick={toggleRoomStatus} className="text-gray-600 hover:text-gray-900">
-                                    {roomData?.active ? <FaToggleOn size={24} className="text-green-500" /> : <FaToggleOff size={24} className="text-gray-400" />}
-                                </button>
-                            </div>
+                        <div className="flex justify-between items-center mt-4">
+                            <span className="text-sm font-semibold">Estado de la Habitación</span>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={localRoomData?.active}
+                                    onChange={toggleRoomStatus}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-600"></div>
+                                <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-md transform transition-transform peer-checked:translate-x-5"></div>
+                            </label>
+                        </div>
 
+                        <div className="flex justify-end mt-4">
                             <button type="submit" className="flex items-center space-x-2 text-green-600 hover:text-green-800">
                                 <FaSave size={16} />
                                 <span>Guardar Cambios</span>

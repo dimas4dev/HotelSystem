@@ -12,11 +12,9 @@ export const useReservationStore = create<ReservationStore>((set) => ({
 
     addReservation: (reservation) => {
         set((state) => ({ reservations: [...state.reservations, reservation] }));
-        console.log("✅ Reserva añadida en Zustand:", reservation);
     },
 
     setReservations: (reservations) => {
         set({ reservations });
-        console.log("✅ Reservas cargadas en Zustand:", reservations);
     },
 }));

@@ -72,7 +72,6 @@ export function makeServer() {
             this.delete("/reservations/:id", (schema, request) => {
                 let id = request.params.id;
                 let reservation = schema.find("reservation", id);
-                console.log("🚀 ~ file: server.ts ~ line 92 ~ this.delete ~ reservation", reservation);
 
                 if (reservation) {
                     reservation.destroy();

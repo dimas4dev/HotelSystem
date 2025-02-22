@@ -17,6 +17,7 @@ const ManageHotels = () => {
     const [isEditRoomModalOpen, setIsEditRoomModalOpen] = useState(false);
     const [roomToEdit, setRoomToEdit] = useState(null);
     const [selectedHotelId, setSelectedHotelId] = useState(null);
+
     useEffect(() => {
         fetchHotels();
     }, []);
@@ -26,7 +27,7 @@ const ManageHotels = () => {
             const response = await api.get("/hotels");
             setHotels(response.data.hotels);
         } catch (error) {
-            console.error("❌ Error al obtener los hoteles:", error);
+            toast.error("Hubo un error al cargar los hoteles.");
         }
     };
 
@@ -35,7 +36,7 @@ const ManageHotels = () => {
         setIsEditModalOpen(true);
     };
 
-    const handleEditRoom = (hotelId, room) => {
+    const handleEditRoom = (hotelId: any, room: any) => {
         setSelectedHotelId(hotelId);
         setRoomToEdit(room);
         setIsEditRoomModalOpen(true);
@@ -70,7 +71,6 @@ const ManageHotels = () => {
             setHotels(hotels.filter((hotel) => hotel.id !== hotelToDelete));
             toast.success("Hotel eliminado correctamente.");
         } catch (error) {
-            console.error("❌ Error al eliminar el hotel:", error);
             toast.error("Hubo un error al eliminar el hotel.");
         }
 
@@ -87,13 +87,6 @@ const ManageHotels = () => {
             >
                 Agregar Nuevo Hotel
             </button>
-
-            <HotelModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                setHotels={setHotels}
-            />
-
 
             {hotels.length === 0 ? (
                 <p className="text-gray-500">No hay hoteles registrados.</p>
@@ -116,7 +109,7 @@ const ManageHotels = () => {
                             {hotel.rooms && Array.isArray(hotel.rooms) ? (
                                 <ul className="mt-2 space-y-2">
                                     {hotel.rooms.map((room) => (
-                                        <li key={room.id} className="p-2 bg-white shadow rounded-md flex justify-between">
+                                        <li key={room.id} className="p-2 bg-white shadow rounded-md flex justify-between items-center">
                                             <div>
                                                 <p className="text-sm">{room.type} - <strong>${room.price}</strong></p>
                                                 <p className="text-xs text-gray-500">Costo Base: ${room.baseCost}, Impuestos: ${room.taxes}</p>
@@ -125,17 +118,32 @@ const ManageHotels = () => {
                                                     {room.active ? "Disponible" : "No disponible"}
                                                 </p>
                                             </div>
+
+                                            {/* 🔹 Agregar botón de edición de habitación */}
+                                            <button
+                                                onClick={() => handleEditRoom(hotel.id, room)}
+                                                className="p-2 text-gray-600 hover:text-gray-900"
+                                            >
+                                                <FaEdit size={16} />
+                                            </button>
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
                                 <p className="text-sm text-gray-500">No hay habitaciones registradas.</p>
                             )}
+
                         </div>
                     ))}
                 </div>
 
             )}
+
+            <HotelModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                setHotels={setHotels}
+            />
 
             <ConfirmationModal
                 isOpen={hotelToDelete !== null}

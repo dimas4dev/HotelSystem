@@ -43,7 +43,6 @@ const HotelModal: React.FC<HotelModalProps> = ({ isOpen, onClose, setHotels }) =
             toast.success("Hotel creado exitosamente.");
             onClose();
         } catch (error) {
-            console.error("❌ Error al crear el hotel:", error);
             toast.error("Hubo un error al crear el hotel.");
         }
     };
