@@ -1,10 +1,14 @@
-import { createServer, Model } from "miragejs";
+import { createServer, Model, hasMany, belongsTo } from "miragejs";
 import { v4 as uuidv4 } from "uuid";
 
 export function makeServer() {
     return createServer({
         models: {
-            hotel: Model,
+            hotel: Model.extend({
+                reservation: Model.extend({
+                    hotel: belongsTo(),
+                }),
+            }),
             reservation: Model,
         },
 
@@ -50,8 +54,8 @@ export function makeServer() {
                     return new Response(JSON.stringify({ error: "Hotel no existe" }), { status: 400, headers: { "Content-Type": "application/json" } });
 
                 }
-
-                let room = hotel.attrs.rooms.find((r) => r.id === attrs.roomId);
+                let hotelAttrs = hotel.attrs as { rooms: { id: string }[] };
+                let room = hotelAttrs.rooms.find((r) => r.id === attrs.roomId);
                 if (!room) {
                     return new Response(JSON.stringify({ error: "La habitacion no existe" }), { status: 400, headers: { "Content-Type": "application/json" } });
                 }
@@ -121,7 +125,7 @@ export function makeServer() {
 
                 attrs.id = crypto.randomUUID();
 
-                attrs.rooms = attrs.rooms.map((room) => ({
+                attrs.rooms = attrs.rooms.map((room: any) => ({
                     id: crypto.randomUUID(),
                     type: room.type,
                     baseCost: room.baseCost,
@@ -143,8 +147,8 @@ export function makeServer() {
                 if (!hotel) {
                     return new Response(JSON.stringify({ error: "Hotel no encontrado" }), { status: 404, headers: { "Content-Type": "application/json" } });
                 }
-
-                let updatedRooms = hotel.attrs.rooms.map((room) =>
+                let hotelAttrs = hotel.attrs as { rooms: { id: string; baseCost: number; taxes: number }[] };
+                let updatedRooms = hotelAttrs.rooms.map((room) =>
                     room.id === roomId
                         ? { ...room, ...attrs, price: attrs.baseCost + attrs.taxes }
                         : room

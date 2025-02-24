@@ -8,12 +8,27 @@ import { roomSchema } from "../schemas/roomSchema";
 import { EditRoomModalProps } from "../types/types";
 
 const EditRoomModal = ({ isOpen, onClose, roomData, hotelId, updateRoomList }: EditRoomModalProps) => {
-    const [localRoomData, setLocalRoomData] = useState(roomData || {});
+    const [localRoomData, setLocalRoomData] = useState(roomData || {
+        type: "Suite",
+        baseCost: 0,
+        taxes: 0,
+        price: 0,
+        maxGuests: 1,
+        active: true,
+    });
+
 
     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(roomSchema),
-        defaultValues: roomData,
+        defaultValues: {
+            type: roomData?.type || "Suite",
+            baseCost: roomData?.baseCost || 0,
+            taxes: roomData?.taxes || 0,
+            price: roomData?.price || 0,
+            maxGuests: roomData?.maxGuests || 1,
+        },
     });
+
 
     useEffect(() => {
         if (roomData) {
