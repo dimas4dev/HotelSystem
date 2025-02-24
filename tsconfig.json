@@ -1,5 +1,12 @@
 {
-  "files": [],
+  "files": [],  
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node"
+  },  
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

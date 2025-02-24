@@ -1,4 +1,4 @@
-import { createServer, Model, hasMany, belongsTo } from "miragejs";
+import { createServer, Model, belongsTo } from "miragejs";
 import { v4 as uuidv4 } from "uuid";
 
 export function makeServer() {
