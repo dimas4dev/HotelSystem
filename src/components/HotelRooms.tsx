@@ -4,7 +4,7 @@ import ConfirmationModal from "./ConfirmationModal";
 
 const HotelRooms = ({ hotelId }: { hotelId: number }) => {
     const { hotels, toggleRoomStatus } = useHotelStore();
-    const hotel = hotels.find((h) => h.id === hotelId);
+    const hotel = hotels.find((h) => h.id === hotelId.toString());
     const [roomToToggle, setRoomToToggle] = useState<number | null>(null);
 
     if (!hotel) return <p>Hotel no encontrado</p>;
@@ -20,7 +20,7 @@ const HotelRooms = ({ hotelId }: { hotelId: number }) => {
         <div className="p-4 bg-gray-50 rounded-md shadow-md mt-4">
             <h2 className="text-lg font-semibold">Habitaciones en {hotel.name}</h2>
             <ul className="mt-2 space-y-2">
-                {hotel.rooms.map((room) => (
+                {hotel.rooms?.map((room) => (
                     <li key={room.id} className="p-3 bg-white shadow rounded-md flex justify-between">
                         <div>
                             <p>Tipo: {room.type}</p>

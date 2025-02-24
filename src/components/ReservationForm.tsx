@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "../services/api";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { reservationSchema } from "../schemas/reservationSchema";
+import { ReservationFormProps } from "../types/types";
 
-const ReservationForm = () => {
+const ReservationForm: React.FC<ReservationFormProps> = () => {
   const [hotels, setHotels] = useState<{ id: string; name: string; rooms: { id: string; type: string; price: number; maxGuests: number }[] }[]>([]);
   const [rooms, setRooms] = useState<{ id: string; type: string; price: number; maxGuests: number }[]>([]);
   const [disabledRooms, setDisabledRooms] = useState<string[]>([]);

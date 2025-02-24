@@ -12,9 +12,9 @@ const Login = () => {
         let user = null;
 
         if (email === "admin@example.com" && password === "admin123") {
-            user = { id: "1", name: "Administrador", email, role: "admin" };
+            user = { id: "1", name: "Administrador", email, role: "admin" as "admin" };
         } else if (email === "client@example.com" && password === "client123") {
-            user = { id: "2", name: "Cliente", email, role: "client" };
+            user = { id: "2", name: "Cliente", email, role: "client" as "client" };
         }
 
         if (user) {

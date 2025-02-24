@@ -5,7 +5,7 @@ import { Hotel } from "../types/types";
 
 const Hotels = () => {
     const [hotels, setHotels] = useState<Hotel[]>([]);
-    const [selectedHotel, setSelectedHotel] = useState<string | null>(null);
+    const [selectedHotel, setSelectedHotel] = useState<string | null>();
 
     useEffect(() => {
         api.get("/hotels").then((response) => {

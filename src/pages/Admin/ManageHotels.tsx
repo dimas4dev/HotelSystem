@@ -16,7 +16,7 @@ const ManageHotels = () => {
     const [hotelToEdit, setHotelToEdit] = useState<Hotel | null>(null);
     const [isEditRoomModalOpen, setIsEditRoomModalOpen] = useState(false);
     const [roomToEdit, setRoomToEdit] = useState(null);
-    const [selectedHotelId, setSelectedHotelId] = useState(null);
+    const [selectedHotelId, setSelectedHotelId] = useState<string>("");
 
     useEffect(() => {
         fetchHotels();
@@ -48,13 +48,13 @@ const ManageHotels = () => {
         );
     };
 
-    const updateRoomList = (updatedRoom) => {
+    const updateRoomList = (updatedRoom:any) => {
         setHotels((prevHotels) =>
             prevHotels.map((hotel) =>
                 hotel.id === selectedHotelId
                     ? {
                         ...hotel,
-                        rooms: hotel.rooms.map((room) =>
+                        rooms: hotel.rooms?.map((room) =>
                             room.id === updatedRoom.id ? updatedRoom : room
                         ),
                     }

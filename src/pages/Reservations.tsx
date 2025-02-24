@@ -22,7 +22,7 @@ const Reservations = () => {
                 } else {
                     setReservations([]);
                 }
-            }).catch((error) => {
+            }).catch(() => {
                 setReservations([]);
             });
         }

@@ -71,4 +71,9 @@ export interface AuthStore {
     logout: (navigate: (path: string) => void) => void;
 }
 
+export interface ReservationFormProps {
+    hotelId: string;
+}
+
+
 
