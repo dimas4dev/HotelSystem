@@ -51,11 +51,17 @@ export interface Hotel {
 export interface Reservation {
     id: string;
     name: string;
+    email: string;
+    phone: string;
+    documentType: string;
+    documentNumber: string;
+    birthDate: string;
+    emergencyContactPhone: string;
+    roomId: string;
+    hotelId: string;
     checkIn: string;
     checkOut: string;
     guests: number;
-    hotelId: string;
-    roomId: string;
 }
 
 export interface User {

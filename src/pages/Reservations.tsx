@@ -37,6 +37,17 @@ const Reservations = () => {
         return hotel ? hotel.name : "Hotel Desconocido";
     };
 
+    const getRoomDetails = (roomId: string) => {
+        for (const hotel of hotels) {
+            const room = hotel.rooms?.find((room) => room.id === roomId);
+            if (room) {
+                return `${room.type} - Máx. ${room.maxGuests} huéspedes`;
+            }
+        }
+        return "Habitación Desconocida - Información no disponible";
+    };
+
+
     const formatDate = (dateString: string) => {
         return format(new Date(dateString), "d 'de' MMMM 'de' yyyy", { locale: es });
     };
@@ -56,6 +67,8 @@ const Reservations = () => {
             toast.error("No se pudo eliminar la reserva.");
         }
     };
+
+
 
 
 
@@ -104,6 +117,14 @@ const Reservations = () => {
                     </div>
 
                     <p><strong>Nombre:</strong> {selectedReservation.name}</p>
+                    <p><strong>Correo:</strong> {selectedReservation.email}</p>
+                    <p><strong>Teléfono:</strong> {selectedReservation.phone}</p>
+                    <p><strong>Tipo de Documento:</strong> {selectedReservation.documentType}</p>
+                    <p><strong>Número de Documento:</strong> {selectedReservation.documentNumber}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {formatDate(selectedReservation.birthDate)}</p>
+                    <p><strong>Contacto de Emergencia:</strong> {selectedReservation.emergencyContactPhone}</p>
+                    <p><strong>Habitación:</strong> {getRoomDetails(selectedReservation.roomId)}</p>
+
                     <p><strong>Hotel:</strong> {getHotelName(selectedReservation.hotelId)}</p>
                     <p><strong>Entrada:</strong> {formatDate(selectedReservation.checkIn)}</p>
                     <p><strong>Salida:</strong> {formatDate(selectedReservation.checkOut)}</p>
