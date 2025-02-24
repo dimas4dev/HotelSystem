@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# 🏨 Plataforma de Gestión de Hoteles y Reservas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Descripción del Proyecto
+Este proyecto es una **plataforma web** desarrollada con **React y TypeScript** que permite a los usuarios **gestionar hoteles y realizar reservas**. Se diseñó con un enfoque en la administración de hoteles, habitaciones y clientes, proporcionando una interfaz intuitiva y funcional.
 
-Currently, two official plugins are available:
+## 🚀 Funcionalidades Principales
+- Creación, edición y eliminación de hoteles.
+- Administración de habitaciones (precios, capacidad, estado).
+- Realización de reservas con validaciones detalladas.
+- Gestión de estados de hoteles y habitaciones (habilitar/deshabilitar).
+- Visualización de reservas con filtros por hotel y fecha.
+- Despliegue automatizado con **GitHub Actions**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Desarrollo del Proyecto
+### 1️⃣ **Manejo del API con Mocks**
+No se desarrollaron servicios web reales para el API. En su lugar, utilizamos **MirageJS** para simular las respuestas del servidor y manejar los datos de manera local sin necesidad de un backend real.
 
-## Expanding the ESLint configuration
+### 2️⃣ **Pruebas Automatizadas**
+Se implementaron pruebas automatizadas con **Jest** para validar la renderización básica de los componentes. **Las pruebas son sencillas**, enfocadas en verificar que los componentes se montan correctamente y que los elementos clave existen en la UI.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+> ⚠️ **Nota**: No se realizaron pruebas avanzadas de integración o end-to-end debido a la naturaleza del proyecto.
 
-- Configure the top-level `parserOptions` property like this:
+### 3️⃣ **Despliegue con GitHub Actions**
+El proyecto se despliega automáticamente en cada `push` o `pull request` utilizando **GitHub Actions**. Se configuró un flujo de trabajo que:
+- Instala dependencias.
+- Ejecuta las pruebas automatizadas.
+- Facilita la integración y la entrega continua.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+🔗 **URL del despliegue**: [Hotel System](https://hotel-system-blue.vercel.app/)
+
+### 4️⃣ **Patrones de Diseño Implementados**
+Durante el desarrollo del código, aplicamos algunos patrones de diseño clave:
+- **Store Pattern** con Zustand para la gestión del estado global.
+- **Componentes Reutilizables** para la UI, como formularios y modales.
+- **Separación de Responsabilidades** con hooks personalizados y utilidades externas.
+
+### 5️⃣ **Envío de Correos Electrónicos**
+El requerimiento de enviar correos electrónicos **no se implementó** porque habría sido necesario **exponer la llave del servicio de correo**, lo cual comprometería la seguridad del sistema. Si hubiéramos implementado esta funcionalidad, habríamos optado por crear un **servicio en Express** para manejar el envío de correos desde el backend, asegurando una mejor gestión de credenciales y seguridad.
+
+## 📂 Estructura del Proyecto
+```
+📦 src
+ ┣ 📂 components        # Componentes reutilizables
+ ┣ 📂 pages             # Páginas principales (Home, Login, Hotels, Reservations)
+ ┣ 📂 services          # API y lógica de negocio
+ ┣ 📂 store             # Gestión de estado con Zustand
+ ┣ 📂 types             # Tipado y modelos de datos
+ ┣ 📂 Mocks             # Simulación del backend con MirageJS
+ ┣ 📂 __tests__         # Pruebas automatizadas con Jest
+ ┗ 📜 main.tsx         # Punto de entrada de la aplicación
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 📜 Conclusión
+Este proyecto demuestra el uso de **React con TypeScript** para construir una plataforma de gestión de hoteles sin necesidad de un backend real. Se implementaron **pruebas automatizadas, mocks de API y despliegue continuo** para garantizar una mejor calidad del software. Aunque no se desarrolló la funcionalidad de envío de correos electrónicos, se dejó documentado cómo podría integrarse en un futuro con una API en **Express**.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+> **🚀 Próximos pasos:**
+> - Mejorar las pruebas automatizadas con más validaciones.
+> - Optimizar la experiencia de usuario en el flujo de reservas.
+> - Implementar un backend real para manejar datos de manera persistente.
